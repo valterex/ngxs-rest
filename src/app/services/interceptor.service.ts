@@ -18,7 +18,6 @@ export class InterceptorService implements HttpInterceptor {
   constructor() {}
 
   handleError(error: HttpErrorResponse): Observable<never> {
-    console.log('lalalalalalalala');
     return throwError(error);
   }
 
