@@ -1,19 +1,58 @@
 import { Injectable } from '@angular/core';
+import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { GetPosts } from './posts.actions';
 import { PostsService } from '../services/posts.service';
-import { Post } from '../models/Post';
+import { NewPost, Post, PatchedPost } from '../models/Post';
+
+export class GetPosts {
+  static readonly type = '[Posts] Get posts';
+}
+
+export class GetPost {
+  static readonly type = '[Posts] Get post';
+  constructor(public postId: number) {}
+}
+
+export class GetPostsByUser {
+  static readonly type = '[Posts] Get posts by user';
+  constructor(public userId: number) {}
+}
+
+export class GetCommentsByPost {
+  static readonly type = '[Posts] Get comments by post';
+  constructor(public postId: number) {}
+}
+
+export class CreatePost {
+  static readonly type = '[Posts] Create post';
+  constructor(public data: NewPost) {}
+}
+
+export class DeletePost {
+  static readonly type = '[Posts] Delete post';
+  constructor(public postId: number) {}
+}
+
+export class PatchPost {
+  static readonly type = '[Posts] Patch post';
+  constructor(public data: PatchedPost, public postId: number) {}
+}
 
 export class PostsStateModel {
   posts: Post[];
+  selectedPost: Post;
+  postComments: Comment[];
+  postsByUser: Post[];
 }
 
 @State<PostsStateModel>({
   name: 'posts',
   defaults: {
     posts: [],
+    selectedPost: null,
+    postComments: [],
+    postsByUser: [],
   },
 })
 @Injectable()
@@ -23,6 +62,21 @@ export class PostsState {
   @Selector()
   static getPosts(state: PostsStateModel): Post[] {
     return state.posts;
+  }
+
+  @Selector()
+  static getSelectedPost(state: PostsStateModel): Post {
+    return state.selectedPost;
+  }
+
+  @Selector()
+  static getPostsByUser(state: PostsStateModel): Post[] {
+    return state.postsByUser;
+  }
+
+  @Selector()
+  static getCommentsByPost(state: PostsStateModel): Comment[] {
+    return state.postComments;
   }
 
   @Action(GetPosts)
@@ -37,6 +91,112 @@ export class PostsState {
         setState({
           ...state,
           posts: response,
+        });
+      })
+    );
+  }
+
+  @Action(GetPost)
+  getSelectedPost(
+    { getState, setState }: StateContext<PostsStateModel>,
+    { postId }: GetPost
+  ): Observable<Post> {
+    return this.postsService.getPost(postId).pipe(
+      tap((response) => {
+        const state = getState();
+
+        setState({
+          ...state,
+          selectedPost: response,
+        });
+      })
+    );
+  }
+
+  @Action(GetPostsByUser)
+  getPostsByUser(
+    { getState, setState }: StateContext<PostsStateModel>,
+    { userId }: GetPostsByUser
+  ): Observable<Post[]> {
+    return this.postsService.getPostsByUser(userId).pipe(
+      tap((response) => {
+        const state = getState();
+
+        setState({
+          ...state,
+          postsByUser: response,
+        });
+      })
+    );
+  }
+
+  @Action(GetCommentsByPost)
+  getCommentsByPost(
+    { getState, setState }: StateContext<PostsStateModel>,
+    { postId }: GetCommentsByPost
+  ): Observable<Comment[]> {
+    return this.postsService.getPostComments(postId).pipe(
+      tap((response) => {
+        const state = getState();
+
+        setState({
+          ...state,
+          postComments: response,
+        });
+      })
+    );
+  }
+
+  @Action(CreatePost)
+  createPost(
+    { getState, patchState }: StateContext<PostsStateModel>,
+    { data }: CreatePost
+  ): Observable<Post> {
+    return this.postsService.createPost(data).pipe(
+      tap((response) => {
+        const state = getState();
+
+        patchState({
+          posts: [...state.posts, response],
+        });
+      })
+    );
+  }
+
+  @Action(DeletePost)
+  deletePost(
+    { getState, setState }: StateContext<PostsStateModel>,
+    { postId }: DeletePost
+  ): Observable<Post> {
+    return this.postsService.deletePost(postId).pipe(
+      tap(() => {
+        const state = getState();
+        const filteredPosts = state.posts.filter((post) => post.id !== postId);
+
+        setState({
+          ...state,
+          posts: filteredPosts,
+        });
+      })
+    );
+  }
+
+  @Action(PatchPost)
+  patchPost(
+    { getState, setState }: StateContext<PostsStateModel>,
+    { data, postId }: PatchPost
+  ): Observable<Post> {
+    return this.postsService.patchPost(data, postId).pipe(
+      tap((response) => {
+        const state = getState();
+        const allPosts = [...state.posts];
+        const postIndex = allPosts.findIndex((post) => post.id === postId);
+
+        allPosts[postIndex] = response;
+
+        setState({
+          ...state,
+          posts: allPosts,
         });
       })
     );
