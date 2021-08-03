@@ -21,7 +21,7 @@ export class PostsService {
   getPosts(): Observable<Post[]> {
     return this.http
       .get<Post[]>(this.apiUrl + this.postsUrl)
-      .pipe(map((res) => res.splice(0, 10)));
+      .pipe(map((res) => res.splice(0, 5)));
   }
 
   getPost(postId: number): Observable<Post> {
