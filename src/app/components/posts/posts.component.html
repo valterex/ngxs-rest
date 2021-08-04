@@ -1,3 +1,4 @@
+<app-spinner></app-spinner>
 <div class="container" *ngIf="posts">
   <div class="card" *ngFor="let post of posts | async">
     <div class="card-content">
@@ -7,6 +8,9 @@
       <p class="subtitle">{{ post.body | titlecase }}</p>
     </div>
     <footer class="card-footer">
+      <p class="card-footer-item">
+        <span>Edit</span>
+      </p>
       <p class="card-footer-item">
         <span>Comments</span>
       </p>
