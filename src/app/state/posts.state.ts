@@ -14,11 +14,6 @@ export class GetPost {
   constructor(public postId: number) {}
 }
 
-export class GetPostsByUser {
-  static readonly type = '[Posts] Get posts by user';
-  constructor(public userId: number) {}
-}
-
 export class GetCommentsByPost {
   static readonly type = '[Posts] Get comments by post';
   constructor(public postId: number) {}
@@ -43,7 +38,7 @@ export class PostsStateModel {
   posts: Post[];
   selectedPost: Post;
   postComments: Comment[];
-  postsByUser: Post[];
+  loading: boolean;
 }
 
 @State<PostsStateModel>({
@@ -52,7 +47,7 @@ export class PostsStateModel {
     posts: [],
     selectedPost: null,
     postComments: [],
-    postsByUser: [],
+    loading: false,
   },
 })
 @Injectable()
@@ -70,20 +65,23 @@ export class PostsState {
   }
 
   @Selector()
-  static getPostsByUser(state: PostsStateModel): Post[] {
-    return state.postsByUser;
+  static getCommentsByPost(state: PostsStateModel): Comment[] {
+    return state.postComments;
   }
 
   @Selector()
-  static getCommentsByPost(state: PostsStateModel): Comment[] {
-    return state.postComments;
+  static isLoading(state: PostsStateModel): boolean {
+    return state.loading;
   }
 
   @Action(GetPosts)
   getPosts({
     getState,
     setState,
+    patchState,
   }: StateContext<PostsStateModel>): Observable<Post[]> {
+    patchState({ loading: true });
+
     return this.postsService.getPosts().pipe(
       tap((response) => {
         const state = getState();
@@ -92,6 +90,8 @@ export class PostsState {
           ...state,
           posts: response,
         });
+
+        patchState({ loading: false });
       })
     );
   }
@@ -108,23 +108,6 @@ export class PostsState {
         setState({
           ...state,
           selectedPost: response,
-        });
-      })
-    );
-  }
-
-  @Action(GetPostsByUser)
-  getPostsByUser(
-    { getState, setState }: StateContext<PostsStateModel>,
-    { userId }: GetPostsByUser
-  ): Observable<Post[]> {
-    return this.postsService.getPostsByUser(userId).pipe(
-      tap((response) => {
-        const state = getState();
-
-        setState({
-          ...state,
-          postsByUser: response,
         });
       })
     );
