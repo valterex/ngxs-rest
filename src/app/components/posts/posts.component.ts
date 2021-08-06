@@ -5,7 +5,6 @@ import { Select, Store } from '@ngxs/store';
 import {
   GetPost,
   GetPosts,
-  GetPostsByUser,
   CreatePost,
   PostsState,
   PatchPost,
@@ -21,8 +20,7 @@ import { NewPost, PatchedPost, Post } from '../../models/Post';
 export class PostsComponent implements OnInit {
   @Select(PostsState.getPosts) posts: Observable<Post[]>;
   @Select(PostsState.getSelectedPost) selectedPost: Observable<Post>;
-  @Select(PostsState.getPostsByUser) postsByUser: Observable<Post[]>;
-  @Select(PostsState.getCommentsByPost) postComments: Observable<Post[]>;
+  @Select(PostsState.isLoading) loading: Observable<boolean>;
 
   constructor(private store: Store) {}
 
@@ -32,10 +30,6 @@ export class PostsComponent implements OnInit {
 
   getPosts(): void {
     this.store.dispatch(new GetPosts());
-  }
-
-  getPostsByUser(userId: number): void {
-    this.store.dispatch(new GetPostsByUser(userId));
   }
 
   getPost(postId: number): void {

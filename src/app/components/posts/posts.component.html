@@ -1,4 +1,7 @@
-<app-spinner></app-spinner>
+<div *ngIf="loading | async">
+  <app-spinner></app-spinner>
+</div>
+
 <div class="container" *ngIf="posts">
   <div class="card" *ngFor="let post of posts | async">
     <div class="card-content">
