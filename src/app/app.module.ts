@@ -10,7 +10,7 @@ import { InterceptorService } from './services/interceptor.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PostsComponent } from './components/posts/posts.component';
-import { SpinnerComponent } from './components/spinner/spinner.component';
+import { SpinnerComponent } from './shared/spinner/spinner.component';
 
 @NgModule({
   declarations: [AppComponent, PostsComponent, SpinnerComponent],
