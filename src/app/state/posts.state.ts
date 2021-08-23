@@ -3,39 +3,22 @@ import { State, Action, StateContext, Selector } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PostsService } from '../services/posts.service';
-import { NewPost, Post, PatchedPost } from '../models/Post';
+import { Post } from '../models/Post';
 
-export class GetPosts {
-  static readonly type = '[Posts] Get posts';
-}
-
-export class GetPost {
-  static readonly type = '[Posts] Get post';
-  constructor(public postId: number) {}
-}
-
-export class GetCommentsByPost {
-  static readonly type = '[Posts] Get comments by post';
-  constructor(public postId: number) {}
-}
-
-export class CreatePost {
-  static readonly type = '[Posts] Create post';
-  constructor(public data: NewPost) {}
-}
-
-export class DeletePost {
-  static readonly type = '[Posts] Delete post';
-  constructor(public postId: number) {}
-}
-
-export class PatchPost {
-  static readonly type = '[Posts] Patch post';
-  constructor(public data: PatchedPost, public postId: number) {}
-}
+import {
+  CreatePost,
+  DeletePost,
+  GetPost,
+  GetPostComments,
+  GetPosts,
+  PatchPost,
+  SetCurrentPage,
+} from './posts.actions';
 
 export class PostsStateModel {
   posts: Post[];
+  currentPage: number | null;
+  postsPerPage: Post[];
   selectedPost: Post;
   postComments: Comment[];
   loading: boolean;
@@ -45,6 +28,8 @@ export class PostsStateModel {
   name: 'posts',
   defaults: {
     posts: [],
+    currentPage: null,
+    postsPerPage: [],
     selectedPost: null,
     postComments: [],
     loading: false,
@@ -113,10 +98,10 @@ export class PostsState {
     );
   }
 
-  @Action(GetCommentsByPost)
-  getCommentsByPost(
+  @Action(GetPostComments)
+  getPostComments(
     { getState, setState }: StateContext<PostsStateModel>,
-    { postId }: GetCommentsByPost
+    { postId }: GetPostComments
   ): Observable<Comment[]> {
     return this.postsService.getPostComments(postId).pipe(
       tap((response) => {
@@ -183,5 +168,18 @@ export class PostsState {
         });
       })
     );
+  }
+
+  @Action(SetCurrentPage)
+  setCurrentPage(
+    { getState, setState }: StateContext<PostsStateModel>,
+    { page }: SetCurrentPage
+  ): void {
+    const state = getState();
+
+    setState({
+      ...state,
+      currentPage: page,
+    });
   }
 }

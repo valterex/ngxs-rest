@@ -2,8 +2,8 @@
   <app-spinner></app-spinner>
 </div>
 
-<div class="container" *ngIf="posts">
-  <div class="card" *ngFor="let post of posts | async">
+<div class="container" *ngIf="postsPerPage">
+  <div class="card" *ngFor="let post of postsPerPage">
     <div class="card-content">
       <p class="title">
         {{ post.title | titlecase }}
@@ -19,4 +19,9 @@
       </p>
     </footer>
   </div>
+
+  <app-pagination
+    [allPagesNumber]="allPages"
+    (changePage)="onPageChange($event)"
+  ></app-pagination>
 </div>

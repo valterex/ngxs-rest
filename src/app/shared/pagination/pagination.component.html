@@ -1,0 +1,38 @@
+<div class="pagination">
+  <button
+    class="pagination__button pagination__first-page"
+    (click)="onFirstPage()"
+    [disabled]="currentPage === 1"
+  >
+    First
+  </button>
+
+  <button
+    class="pagination__button pagination__previous-page"
+    (click)="onPreviousPage()"
+    [disabled]="currentPage === 1"
+  >
+    Previous
+  </button>
+
+  <div class="pagination__count">
+    <span class="pagination__current-page">{{ currentPage }}</span>
+    / <span>{{ allPagesNumber }}</span>
+  </div>
+
+  <button
+    class="pagination__button pagination__next-page"
+    (click)="onNextPage()"
+    [disabled]="currentPage === allPagesNumber"
+  >
+    Next
+  </button>
+
+  <button
+    class="pagination__button pagination__last-page"
+    [disabled]="currentPage === allPagesNumber"
+    (click)="onLastPage()"
+  >
+    Last
+  </button>
+</div>
