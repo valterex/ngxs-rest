@@ -11,9 +11,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PostsComponent } from './components/posts/posts.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
+import { PaginationComponent } from './shared/pagination/pagination.component';
 
 @NgModule({
-  declarations: [AppComponent, PostsComponent, SpinnerComponent],
+  declarations: [AppComponent, PostsComponent, SpinnerComponent, PaginationComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { NewPost, PatchedPost, Post } from '../models/Post';
 import { environment } from '../../environments/environment';
 
@@ -19,9 +18,7 @@ export class PostsService {
   constructor(private http: HttpClient) {}
 
   getPosts(): Observable<Post[]> {
-    return this.http
-      .get<Post[]>(this.apiUrl + this.postsUrl)
-      .pipe(map((res) => res.splice(0, 5)));
+    return this.http.get<Post[]>(this.apiUrl + this.postsUrl);
   }
 
   getPost(postId: number): Observable<Post> {
@@ -31,12 +28,6 @@ export class PostsService {
   getPostComments(postId: number): Observable<Comment[]> {
     return this.http.get<Comment[]>(
       this.apiUrl + this.postsUrl + `/${postId}/comments`
-    );
-  }
-
-  getPostsByUser(userId: number): Observable<Post[]> {
-    return this.http.get<Post[]>(
-      this.apiUrl + this.postsUrl + `?userId=${userId}`
     );
   }
 
