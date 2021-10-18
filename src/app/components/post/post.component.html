@@ -1,0 +1,33 @@
+<div *ngIf="loading | async">
+  <app-spinner></app-spinner>
+</div>
+
+<div class="container" *ngIf="post | async">
+  <div>
+    <article class="message is-info">
+      <div class="message-header">
+        <p>
+          {{ (post | async).title }}
+        </p>
+      </div>
+      <div class="message-body">
+        {{ (post | async).body }}
+      </div>
+    </article>
+  </div>
+  <div class="content" *ngIf="comments | async">
+    <h3>Comments</h3>
+    <div *ngFor="let comment of comments | async">
+      <article class="message is-info">
+        <div class="message-body">
+          <p>
+            {{ comment.email }}
+          </p>
+          <p>
+            {{ comment.body }}
+          </p>
+        </div>
+      </article>
+    </div>
+  </div>
+</div>

@@ -1,4 +1,4 @@
-import { NewPost, PatchedPost } from '../models/Post';
+import { Post } from '../models/Post';
 
 export class GetPosts {
   static readonly type = '[Posts] Posts';
@@ -6,6 +6,7 @@ export class GetPosts {
 
 export class GetPostsPerPage {
   static readonly type = '[Posts] Posts per page';
+  constructor(public data: Post[]) {}
 }
 
 export class GetPost {
@@ -16,21 +17,6 @@ export class GetPost {
 export class GetPostComments {
   static readonly type = '[Posts] Post comments';
   constructor(public postId: number) {}
-}
-
-export class CreatePost {
-  static readonly type = '[Posts] Create';
-  constructor(public data: NewPost) {}
-}
-
-export class DeletePost {
-  static readonly type = '[Posts] Delete';
-  constructor(public postId: number) {}
-}
-
-export class PatchPost {
-  static readonly type = '[Posts] Patch';
-  constructor(public data: PatchedPost, public postId: number) {}
 }
 
 export class SetCurrentPage {

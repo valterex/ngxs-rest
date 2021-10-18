@@ -10,11 +10,20 @@ import { InterceptorService } from './services/interceptor.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PostsComponent } from './components/posts/posts.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { SpinnerComponent } from './shared/spinner/spinner.component';
 import { PaginationComponent } from './shared/pagination/pagination.component';
+import { PostComponent } from './components/post/post.component';
 
 @NgModule({
-  declarations: [AppComponent, PostsComponent, SpinnerComponent, PaginationComponent],
+  declarations: [
+    AppComponent,
+    PostsComponent,
+    SpinnerComponent,
+    PaginationComponent,
+    PageNotFoundComponent,
+    PostComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,

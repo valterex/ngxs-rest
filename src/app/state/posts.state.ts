@@ -6,21 +6,19 @@ import { PostsService } from '../services/posts.service';
 import { Post } from '../models/Post';
 
 import {
-  CreatePost,
-  DeletePost,
   GetPost,
   GetPostComments,
   GetPosts,
-  PatchPost,
+  GetPostsPerPage,
   SetCurrentPage,
 } from './posts.actions';
 
 export class PostsStateModel {
-  posts: Post[];
-  currentPage: number | null;
-  postsPerPage: Post[];
-  selectedPost: Post;
-  postComments: Comment[];
+  posts: Array<Post>;
+  currentPage: number;
+  postsPerPage: Array<Post>;
+  post: Post;
+  postComments: Array<Comment>;
   loading: boolean;
 }
 
@@ -30,7 +28,7 @@ export class PostsStateModel {
     posts: [],
     currentPage: null,
     postsPerPage: [],
-    selectedPost: null,
+    post: null,
     postComments: [],
     loading: false,
   },
@@ -45,12 +43,17 @@ export class PostsState {
   }
 
   @Selector()
-  static getSelectedPost(state: PostsStateModel): Post {
-    return state.selectedPost;
+  static getPostsPerPage(state: PostsStateModel): Post[] {
+    return state.postsPerPage;
   }
 
   @Selector()
-  static getCommentsByPost(state: PostsStateModel): Comment[] {
+  static getPost(state: PostsStateModel): Post {
+    return state.post;
+  }
+
+  @Selector()
+  static getPostComments(state: PostsStateModel): Comment[] {
     return state.postComments;
   }
 
@@ -74,6 +77,8 @@ export class PostsState {
         setState({
           ...state,
           posts: response,
+          post: null,
+          postComments: null,
         });
 
         patchState({ loading: false });
@@ -82,18 +87,21 @@ export class PostsState {
   }
 
   @Action(GetPost)
-  getSelectedPost(
-    { getState, setState }: StateContext<PostsStateModel>,
+  getPost(
+    { getState, setState, patchState }: StateContext<PostsStateModel>,
     { postId }: GetPost
   ): Observable<Post> {
+    patchState({ loading: true });
+    const state = getState();
+
     return this.postsService.getPost(postId).pipe(
       tap((response) => {
-        const state = getState();
-
         setState({
           ...state,
-          selectedPost: response,
+          post: response,
         });
+
+        patchState({ loading: false });
       })
     );
   }
@@ -115,61 +123,6 @@ export class PostsState {
     );
   }
 
-  @Action(CreatePost)
-  createPost(
-    { getState, patchState }: StateContext<PostsStateModel>,
-    { data }: CreatePost
-  ): Observable<Post> {
-    return this.postsService.createPost(data).pipe(
-      tap((response) => {
-        const state = getState();
-
-        patchState({
-          posts: [...state.posts, response],
-        });
-      })
-    );
-  }
-
-  @Action(DeletePost)
-  deletePost(
-    { getState, setState }: StateContext<PostsStateModel>,
-    { postId }: DeletePost
-  ): Observable<Post> {
-    return this.postsService.deletePost(postId).pipe(
-      tap(() => {
-        const state = getState();
-        const filteredPosts = state.posts.filter((post) => post.id !== postId);
-
-        setState({
-          ...state,
-          posts: filteredPosts,
-        });
-      })
-    );
-  }
-
-  @Action(PatchPost)
-  patchPost(
-    { getState, setState }: StateContext<PostsStateModel>,
-    { data, postId }: PatchPost
-  ): Observable<Post> {
-    return this.postsService.patchPost(data, postId).pipe(
-      tap((response) => {
-        const state = getState();
-        const allPosts = [...state.posts];
-        const postIndex = allPosts.findIndex((post) => post.id === postId);
-
-        allPosts[postIndex] = response;
-
-        setState({
-          ...state,
-          posts: allPosts,
-        });
-      })
-    );
-  }
-
   @Action(SetCurrentPage)
   setCurrentPage(
     { getState, setState }: StateContext<PostsStateModel>,
@@ -181,5 +134,22 @@ export class PostsState {
       ...state,
       currentPage: page,
     });
+  }
+
+  @Action(GetPostsPerPage)
+  getPostsPerPage(
+    { getState, setState, patchState }: StateContext<PostsStateModel>,
+    { data }: GetPostsPerPage
+  ): void {
+    patchState({ loading: true });
+
+    const state = getState();
+
+    setState({
+      ...state,
+      postsPerPage: data,
+    });
+
+    patchState({ loading: false });
   }
 }

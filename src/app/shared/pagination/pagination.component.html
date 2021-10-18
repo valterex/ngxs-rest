@@ -1,6 +1,38 @@
-<div class="pagination">
+<nav class="pagination is-right" role="navigation">
+  <ul class="pagination-list">
+    <li>
+      <button
+        class="pagination-previous"
+        (click)="onPreviousPage()"
+        [disabled]="currentPage === 1"
+      >
+        Previous
+      </button>
+    </li>
+
+    <li class="pagination-link">
+      {{ currentPage }}
+    </li>
+
+    <li><span class="pagination-ellipsis">/</span></li>
+
+    <li class="pagination-link">
+      {{ allPagesNumber }}
+    </li>
+
+    <li>
+      <button
+        class="pagination-next"
+        (click)="onNextPage()"
+        [disabled]="currentPage === allPagesNumber"
+      >
+        Next
+      </button>
+    </li>
+  </ul>
+
   <button
-    class="pagination__button pagination__first-page"
+    class="pagination-link"
     (click)="onFirstPage()"
     [disabled]="currentPage === 1"
   >
@@ -8,31 +40,10 @@
   </button>
 
   <button
-    class="pagination__button pagination__previous-page"
-    (click)="onPreviousPage()"
-    [disabled]="currentPage === 1"
-  >
-    Previous
-  </button>
-
-  <div class="pagination__count">
-    <span class="pagination__current-page">{{ currentPage }}</span>
-    / <span>{{ allPagesNumber }}</span>
-  </div>
-
-  <button
-    class="pagination__button pagination__next-page"
-    (click)="onNextPage()"
-    [disabled]="currentPage === allPagesNumber"
-  >
-    Next
-  </button>
-
-  <button
-    class="pagination__button pagination__last-page"
+    class="pagination-link"
     [disabled]="currentPage === allPagesNumber"
     (click)="onLastPage()"
   >
     Last
   </button>
-</div>
+</nav>

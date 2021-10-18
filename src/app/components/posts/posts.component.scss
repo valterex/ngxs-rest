@@ -1,34 +1,16 @@
-.card {
+.container {
+  margin-top: 20px !important;
+}
+
+.message {
   margin-bottom: 20px;
-}
 
-.card:last-child {
-  margin-bottom: 0;
-}
+  .message-header > p > a {
+    text-decoration: none;
+  }
 
-.card-content {
-  background: #e0e0e0;
-}
-
-.card-footer {
-  background: #485fc7;
-}
-
-.card-footer-item > span {
-  color: #fff;
-}
-
-.title,
-.subtitle {
-  text-align: center;
-}
-
-.title {
-  font-size: 1.3em;
-  font-weight: 500;
-}
-
-.subtitle {
-  padding-top: 10px;
-  font-size: 1em;
+  .message-header > p > a:hover {
+    color: #d4d4d4;
+    transition: linear 0.2s;
+  }
 }

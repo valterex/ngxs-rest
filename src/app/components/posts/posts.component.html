@@ -3,21 +3,20 @@
 </div>
 
 <div class="container" *ngIf="postsPerPage">
-  <div class="card" *ngFor="let post of postsPerPage">
-    <div class="card-content">
-      <p class="title">
-        {{ post.title | titlecase }}
-      </p>
-      <p class="subtitle">{{ post.body | titlecase }}</p>
-    </div>
-    <footer class="card-footer">
-      <p class="card-footer-item">
-        <span>Edit</span>
-      </p>
-      <p class="card-footer-item">
-        <span>Comments</span>
-      </p>
-    </footer>
+  <div *ngFor="let post of postsPerPage">
+    <article class="message is-info">
+      <div class="message-header">
+        <p>
+          <a routerLink="/posts/{{ post.id }}">
+            {{ post.title | titlecase }}
+          </a>
+        </p>
+        <button class="delete" aria-label="delete"></button>
+      </div>
+      <div class="message-body">
+        {{ post.body | titlecase }}
+      </div>
+    </article>
   </div>
 
   <app-pagination
