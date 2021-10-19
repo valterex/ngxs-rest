@@ -32,11 +32,11 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.10",
-    "@angular/cli": "~12.2.10",
+    "@angular/cli": "^12.2.10",
     "@angular/compiler-cli": "~12.2.10",
-    "@types/node": "^12.11.1",
     "@types/jasmine": "~3.5.0",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~5.0.0",
