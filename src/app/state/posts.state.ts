@@ -63,25 +63,17 @@ export class PostsState {
   }
 
   @Action(GetPosts)
-  getPosts({
-    getState,
-    setState,
-    patchState,
-  }: StateContext<PostsStateModel>): Observable<Post[]> {
+  getPosts({ patchState }: StateContext<PostsStateModel>): Observable<Post[]> {
     patchState({ loading: true });
 
     return this.postsService.getPosts().pipe(
       tap((response) => {
-        const state = getState();
-
-        setState({
-          ...state,
+        patchState({
+          loading: false,
           posts: response,
           post: null,
           postComments: null,
         });
-
-        patchState({ loading: false });
       })
     );
   }
@@ -92,64 +84,41 @@ export class PostsState {
     { postId }: GetPost
   ): Observable<Post> {
     patchState({ loading: true });
-    const state = getState();
 
     return this.postsService.getPost(postId).pipe(
       tap((response) => {
-        setState({
-          ...state,
-          post: response,
-        });
-
-        patchState({ loading: false });
+        patchState({ loading: false, post: response });
       })
     );
   }
 
   @Action(GetPostComments)
   getPostComments(
-    { getState, setState }: StateContext<PostsStateModel>,
+    { patchState }: StateContext<PostsStateModel>,
     { postId }: GetPostComments
   ): Observable<Comment[]> {
+    patchState({ loading: true });
+
     return this.postsService.getPostComments(postId).pipe(
       tap((response) => {
-        const state = getState();
-
-        setState({
-          ...state,
-          postComments: response,
-        });
+        patchState({ loading: false, postComments: response });
       })
     );
   }
 
   @Action(SetCurrentPage)
   setCurrentPage(
-    { getState, setState }: StateContext<PostsStateModel>,
+    { patchState }: StateContext<PostsStateModel>,
     { page }: SetCurrentPage
   ): void {
-    const state = getState();
-
-    setState({
-      ...state,
-      currentPage: page,
-    });
+    patchState({ currentPage: page });
   }
 
   @Action(GetPostsPerPage)
   getPostsPerPage(
-    { getState, setState, patchState }: StateContext<PostsStateModel>,
+    { patchState }: StateContext<PostsStateModel>,
     { data }: GetPostsPerPage
   ): void {
-    patchState({ loading: true });
-
-    const state = getState();
-
-    setState({
-      ...state,
-      postsPerPage: data,
-    });
-
-    patchState({ loading: false });
+    patchState({ postsPerPage: data });
   }
 }
