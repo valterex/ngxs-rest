@@ -1,8 +1,24 @@
 .container {
   margin-top: 20px !important;
 
-  .comments-header {
+  .comments {
     margin-top: 20px;
     color: #797979;
+  }
+
+  .comment {
+    margin-bottom: 10px;
+  }
+
+  .comment-body {
+    font-style: italic;
+  }
+
+  .button {
+    margin-bottom: 20px;
+  }
+
+  .button > a {
+    color: #296fa8;
   }
 }

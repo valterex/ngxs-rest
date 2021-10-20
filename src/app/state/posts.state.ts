@@ -80,7 +80,7 @@ export class PostsState {
 
   @Action(GetPost)
   getPost(
-    { getState, setState, patchState }: StateContext<PostsStateModel>,
+    { patchState }: StateContext<PostsStateModel>,
     { postId }: GetPost
   ): Observable<Post> {
     patchState({ loading: true });

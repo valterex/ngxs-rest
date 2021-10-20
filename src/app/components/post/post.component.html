@@ -3,6 +3,9 @@
 </div>
 
 <div class="container" *ngIf="post | async">
+  <button class="button is-info is-light">
+    <a routerLink="/posts">Return to post listing</a>
+  </button>
   <div>
     <article class="message is-info">
       <div class="message-header">
@@ -15,15 +18,13 @@
       </div>
     </article>
   </div>
-  <div class="content" *ngIf="comments | async">
+  <div class="content comments" *ngIf="comments | async">
     <h3>Comments</h3>
-    <div *ngFor="let comment of comments | async">
+    <div *ngFor="let comment of comments | async" class="comment">
       <article class="message is-info">
         <div class="message-body">
-          <p>
-            {{ comment.email }}
-          </p>
-          <p>
+          <p><strong>Author</strong>: {{ comment.email }}</p>
+          <p class="comment-body">
             {{ comment.body }}
           </p>
         </div>
